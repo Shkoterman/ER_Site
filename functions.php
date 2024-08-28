@@ -222,14 +222,19 @@ function get_airtable_events() {
     $response = wp_remote_get($api_url, array(
         'headers' => $headers
     ));
-    
-    return $response;
+    $data = json_decode($response['body'])
+    return $data;
 }
 
 function display_events_calendar() {
 	$events = get_airtable_events();
-
-    echo print_r(gettype(json_decode($events['body'])));
+	
+    foreach ($events as $event) {
+        $fields = $event['fields'];
+    #    echo "<div class='event'>";
+    #    echo "<h3>{$fields['Название события']}</h3>";
+    #    echo "</div>";
+    }
 	
 
     
