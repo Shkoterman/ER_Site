@@ -231,16 +231,16 @@ function display_events_calendar() {
 	$events = get_airtable_events();
 	
 	$predata = $events['body'];
-	$data = json_decode($predata, true);
+	$data = json_decode($predata, true)['records'];
 	
-	echo print_r($data['records']);
+	echo print_r($data);
 
     echo gettype($data);
 
 	foreach ($data as $event) {
-        $fields = $event;
+        $fields = $event['id'];
         echo "<div class='event'>";
-        echo "<h3>{$fields['Name_event']}</h3>";
+        echo "<h3>{$fields}</h3>";
         echo "</div>";
     }
 	
