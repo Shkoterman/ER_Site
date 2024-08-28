@@ -222,8 +222,9 @@ function get_airtable_events() {
     $response = wp_remote_get($api_url, array(
         'headers' => $headers
     ));
+	
     $data = json_decode($response)
-    return $data['body'];
+    return $data;
 }
 
 function display_events_calendar() {
