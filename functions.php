@@ -223,7 +223,7 @@ function get_airtable_events() {
         'headers' => $headers
     ));
     
-	$data1 = json_decode($events['body']);
+	$data1 = json_decode($events);
 	
     return $data1;
 }
