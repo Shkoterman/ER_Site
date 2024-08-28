@@ -233,9 +233,16 @@ function display_events_calendar() {
 	$predata = $events['body'];
 	$data = json_decode($predata, true);
 	
-	echo print_r($data['records']);
+	#echo print_r($data['records']);
 
-    echo gettype($data);
+    #echo gettype($data);
+
+	foreach ($data as $event) {
+        $fields = $event['fields'];
+        echo "<div class='event'>";
+        echo "<h3>{$fields['Name_event']}</h3>";
+        echo "</div>";
+    }
 	
 
     
