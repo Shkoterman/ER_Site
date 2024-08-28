@@ -238,7 +238,7 @@ function display_events_calendar() {
     echo gettype($data);
 
 	foreach ($data as $event) {
-        $fields = $event['id'];
+        $fields = $event['Name_event'];
         echo "<div class='event'>";
         echo "<h3>{$fields}</h3>";
         echo "</div>";
