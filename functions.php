@@ -231,11 +231,11 @@ function display_events_calendar() {
 	$events = get_airtable_events();
 	
 	$predata = $events['body'];
-	#$data = json_decode($predata);
+	$data = json_decode($predata, true);
 	
-	echo $predata;
+	echo $data;
 
-    echo gettype($predata);
+    echo gettype($data);
 	
 
     
