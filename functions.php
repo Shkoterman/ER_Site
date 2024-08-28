@@ -223,13 +223,15 @@ function get_airtable_events() {
         'headers' => $headers
     ));
 
-    $data = json_decode($response)
-    return $data;
+    #$data = json_decode($response)
+    return $response;
 }
 
 function display_events_calendar() {
 	$events = get_airtable_events();
-	#echo $events
+	echo 'asda'
+	echo 'asdasd'
+	echo $events
 
     #foreach ($events as $event) {
     #    $fields = $event['fields'];
