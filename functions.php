@@ -233,7 +233,7 @@ function display_events_calendar() {
 	$predata = $events['body'];
 	$data = json_decode($predata, true)['records'];
 	
-	echo print_r($data);
+	echo print_r($data)[0];
 
     echo gettype($data);
 
