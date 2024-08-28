@@ -225,13 +225,13 @@ function get_airtable_events() {
     
 	$data1 = json_decode($response['body']);
 	
-    return $data1;
+    return $response;
 }
 
 function display_events_calendar() {
 	$events = get_airtable_events();
-	echo $events;
-    echo gettype($events);
+	echo $events['body'];
+    echo gettype($events['body']);
 	
 
     
