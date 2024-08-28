@@ -240,7 +240,7 @@ function display_events_calendar() {
 	foreach ($data as $event) {
         $fields = $event;
         echo "<div class='event'>";
-        echo "<h3>{$fields}</h3>";
+        echo "<h3>{$fields['Name_event']}</h3>";
         echo "</div>";
     }
 	
