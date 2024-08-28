@@ -210,7 +210,7 @@ add_action( 'init', 'twentytwentyfour_pattern_categories' );
 function get_airtable_events() {
 
 
-    $api_url = 'https://api.airtable.com/v0/app7g2ANnagHYZkZ8/tbleWW3ENwjP0uDgh/viww3iBpMsoPjyCpq';
+    $api_url = 'https://api.airtable.com/app7g2ANnagHYZkZ8/tbleWW3ENwjP0uDgh/viww3iBpMsoPjyCpq';
 
     // Заголовки для авторизации и формата запроса
     $headers = array(
