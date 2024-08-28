@@ -229,7 +229,7 @@ function get_airtable_events() {
 function display_events_calendar() {
 	$events = get_airtable_events();
 
-    echo array_keys($events);
+    print_r array_keys($events);
 }
 
 add_shortcode('airtable_events', 'display_events_calendar');
