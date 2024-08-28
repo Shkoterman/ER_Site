@@ -231,7 +231,7 @@ function display_events_calendar() {
 	$events = get_airtable_events();
 	echo 'asda'
 	echo 'asdasd'
-	echo $events
+	#echo $events
 
     #foreach ($events as $event) {
     #    $fields = $event['fields'];
