@@ -210,7 +210,7 @@ add_action( 'init', 'twentytwentyfour_pattern_categories' );
 function get_airtable_events() {
 
 
-    $api_url = 'https://api.airtable.com/v0/app7g2ANnagHYZkZ8/tbleWW3ENwjP0uDgh';
+    $api_url = 'https://api.airtable.com/v0/app7g2ANnagHYZkZ8/tbleWW3ENwjP0uDgh/viww3iBpMsoPjyCpq';
 
     // Заголовки для авторизации и формата запроса
     $headers = array(
@@ -232,11 +232,7 @@ function get_airtable_events() {
 function display_events_calendar() {
 	$events = get_airtable_events();
 
-
-//	$string1 = implode('. ', $events);
-
-
-        echo var_dump($events['body']);
+    echo var_dump($events['body']);
 }
 
 add_shortcode('airtable_events', 'display_events_calendar');
