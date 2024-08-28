@@ -223,9 +223,9 @@ function get_airtable_events() {
         'headers' => $headers
     ));
     
-	$data1 = json_decode($events);
+	$data1 = json_decode($response['body']);
 	
-    return $response;
+    return $data1;
 }
 
 function display_events_calendar() {
