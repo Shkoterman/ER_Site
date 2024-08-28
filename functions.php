@@ -231,7 +231,7 @@ function get_airtable_events() {
 function display_events_calendar() {
 	$events = get_airtable_events();
 	
-    echo print_r();
+    echo print_r($events);
 	
 
     
