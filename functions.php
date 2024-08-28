@@ -230,8 +230,8 @@ function get_airtable_events() {
 function display_events_calendar() {
 	$events = get_airtable_events();
 	
-	#$predata = $events['body'];
-	#$data = json_decode($predata, true)['records'];
+	$predata = $events['body'];
+	$data = json_decode($predata, true)['records'];
 	
 	#echo print_r($data[0]['fields']['Name_event']);
 
