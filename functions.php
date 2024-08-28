@@ -228,13 +228,13 @@ function get_airtable_events() {
 
 function display_events_calendar() {
 	$events = get_airtable_events();
-	
-    foreach ($events as $event) {
-        $fields = $event['fields'];
+	echo $events
+    #foreach ($events as $event) {
+    #    $fields = $event['fields'];
     #    echo "<div class='event'>";
     #    echo "<h3>{$fields['Название события']}</h3>";
     #    echo "</div>";
-    }
+    #}
 	
 
     
