@@ -210,7 +210,7 @@ add_action( 'init', 'twentytwentyfour_pattern_categories' );
 function get_airtable_events() {
 
 
-    $api_url = 'https://api.airtable.com/v0/app7g2ANnagHYZkZ8/tbleWW3ENwjP0uDgh';
+    $api_url = 'https://api.airtable.com/v0/app7g2ANnagHYZkZ8/tbleWW3ENwjP0uDgh?maxRecords=3&view=viwwgjyNHmGyuRhia';
 
     // Заголовки для авторизации и формата запроса
     $headers = array(
@@ -233,15 +233,42 @@ function display_events_calendar() {
 	$predata = $events['body'];
 	$data = json_decode($predata, true)['records'];
 	
-	#echo print_r($data[0]['fields']['Name_event']);
+	#echo print_r('asdasdasdasdasdasd');
 
-    #echo gettype($data);
+	/// !!!! ОБРАБОТАЙ НА ПУСТЫЕ ПОЛЯ ИЗ AIRTABLE !!!!!!!!!!
+    
+	
+	#echo gettype($data);
 
+	$daysOfWeek = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
 	foreach ($data as $event) {
-        $fields = $event['fields']['Name_event'];
-        echo "<div class='event'>";
-        echo "<h3>{$fields}</h3>";
-        echo "</div>";
+        #$fields = $event['fields']['Name_event'];
+        #echo "<div class='event'>";
+        
+		//название ивента
+		echo "<h3>{$event['fields']['Name_event']}</h3>";
+		
+		//дата + День недели
+		$dateB = new DateTime($event['fields']['Начало Мероприятия']);
+		$dayOfWeek = $dateB->format('w');
+		$formattedDate = $dateB->format('d.m') . ' (' . $daysOfWeek[$dayOfWeek] . ')';
+		echo "<h5>{$formattedDate}</h5>";
+        //время наччала
+		$formattedTimeB = $dateB->format('H.i');
+				
+		//время конца
+		$dateE = new DateTime($event['fields']['Date (end)']);
+		$formattedTimeE = $dateE->format('H.i');
+		echo "<h5>{$formattedTimeB} - {$formattedTimeE}</h5>";
+
+		//цена more
+		$price_m = $event['fields']['Стоимость д. клуба'];
+		echo "<h5>{$price_m}</h5>";
+
+		//цена заморышей
+		$price_z = $event['fields']['Стоимость д. всех'];
+		echo "<h5>{$price_z}</h5>";
+		echo "</div>";
     }
 	
 
@@ -250,38 +277,3 @@ function display_events_calendar() {
 
 add_shortcode('airtable_events', 'display_events_calendar');
 
-function create_event_programmatically() {
-    // Подготовка данных события
-    $event_data = array(
-        'post_title'    => 'Мое новое событие', // Название события
-        'post_content'  => 'Описание моего события', // Описание события
-        'post_status'   => 'publish', // Статус: 'publish', 'draft'
-        'post_type'     => 'tribe_events', // Тип записи 'tribe_events'
-        'post_author'   => 1, // ID автора
-    );
-
-    // Вставка записи в базу данных (создание события)
-    $event_id = wp_insert_post($event_data);
-
-    if ($event_id) {
-        // Добавление дополнительных метаданных для события
-        // Установка даты начала
-        update_post_meta($event_id, '_EventStartDate', '2024-09-01 10:00:00');
-        
-        // Установка даты окончания
-        update_post_meta($event_id, '_EventEndDate', '2024-09-01 12:00:00');
-        
-        // Установка местоположения (если необходимо)
-        update_post_meta($event_id, '_EventVenueID', 123); // ID места проведения
-
-        // Установка организатора (если необходимо)
-        update_post_meta($event_id, '_EventOrganizerID', 456); // ID организатора
-
-        echo "Событие успешно создано с ID: " . $event_id;
-    } else {
-        echo "Ошибка при создании события.";
-    }
-}
-
-// Вызов функции для создания события
-create_event_programmatically();
