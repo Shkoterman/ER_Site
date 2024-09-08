@@ -256,6 +256,8 @@ function display_events_calendar() {
 		$price_z = isset($event['fields']['Стоимость д. всех']) ? $event['fields']['Стоимость д. всех'] : '-';	
 		$description = isset($event['fields']['Стоимость д. всех']) ? $event['fields']['Описание'] : '';
 
+		$event_id = $event['id'];
+
 		$this_event = [
 			'event_name' => $event_name, 
 			'date_b' => $formattedDateB, 
@@ -264,9 +266,11 @@ function display_events_calendar() {
 			'subs_star' => $for_subs_only, 
 			'price_m' => $price_m, 
 			'price_z' => $price_z, 
-			'description' => $description
+			'description' => $description,
+			'event_id' => $event_id
 		];
 			array_push($events, $this_event);
+		
 		#echo "<h3>{$event_name}{$for_subs_only}</h3>";
 		#echo "<h5>{$description}</h5>";
         #echo "<h5>{$formattedDateB}</h5>";
@@ -278,7 +282,7 @@ function display_events_calendar() {
 
 
 
-
+	
 	return $events;
 }
 
@@ -293,15 +297,24 @@ function display_event_cards() {
     
 	// HTML для вывода карточек
     $output = '<div class="event-cards-container">';
-
+	
     foreach ($events as $event) {
 
         // Создание карточки для каждого события
+		var_dump($event);
         $output .= '
         <div class="event-card">
             <h3>' . esc_html($event['event_name']) . '</h3>
             <p class="event-description">' . esc_html($event['description']) . '</p>
             <p><strong>Date:</strong> ' . esc_html($event['date_b']) . '</p>
+        </div>
+		<div id="modal-<?php echo $event['event_id']; ?>" class="modal">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeModal('<?php echo $event['event_id']; ?>')">&times;</span>
+                <h3><?php echo esc_html($event['event_name']); ?></h3>
+                <p><?php echo esc_html($event['description']); ?></p>
+                <p><strong>Date:</strong> <?php echo esc_html($event['date_b']); ?></p>
+            </div>
         </div>';
     }
 
