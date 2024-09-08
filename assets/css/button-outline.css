@@ -4,3 +4,32 @@
 	color: var(--wp--preset--color--base);
 	border-color: var(--wp--preset--color--contrast-2, var(--wp--preset--color--contrast, currentColor));
 }
+.event-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.event-card {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0; /* Граница */
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease; /* Анимация при наведении */
+}
+
+.event-card:hover {
+    transform: translateY(-5px); /* Легкий подъем карточки при наведении */
+}
+
+.event-card h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.event-card p {
+    font-size: 1em;
+    margin: 5px 0;
+}

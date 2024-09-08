@@ -166,15 +166,7 @@ if ( ! function_exists( 'twentytwentyfour_block_stylesheets' ) ) :
 		 *
 		 * See https://make.wordpress.org/core/2021/12/15/using-multiple-stylesheets-per-block/ for more info.
 		 */
-		wp_enqueue_block_style(
-			'core/button',
-			array(
-				'handle' => 'twentytwentyfour-button-style-outline',
-				'src'    => get_parent_theme_file_uri( 'assets/css/button-outline.css' ),
-				'ver'    => wp_get_theme( get_template() )->get( 'Version' ),
-				'path'   => get_parent_theme_file_path( 'assets/css/button-outline.css' ),
-			)
-		);
+		wp_enqueue_style('main-styles', get_stylesheet_uri());
 	}
 endif;
 
@@ -239,41 +231,84 @@ function display_events_calendar() {
     
 	
 	#echo gettype($data);
-
+	$events = [];
 	$daysOfWeek = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
 	foreach ($data as $event) {
         #$fields = $event['fields']['Name_event'];
         #echo "<div class='event'>";
         
 		//название ивента
-		echo "<h3>{$event['fields']['Name_event']}</h3>";
-		
-		//дата + День недели
+		$event_name = $event['fields']['Name_event'];
+
 		$dateB = new DateTime($event['fields']['Начало Мероприятия']);
+		$dateB->modify('+2 hours');
 		$dayOfWeek = $dateB->format('w');
-		$formattedDate = $dateB->format('d.m') . ' (' . $daysOfWeek[$dayOfWeek] . ')';
-		echo "<h5>{$formattedDate}</h5>";
-        //время наччала
+		$formattedDateB = $dateB->format('d.m') . ' (' . $daysOfWeek[$dayOfWeek] . ')';
 		$formattedTimeB = $dateB->format('H.i');
-				
-		//время конца
+		
 		$dateE = new DateTime($event['fields']['Date (end)']);
+		$dateE->modify('+2 hours');
 		$formattedTimeE = $dateE->format('H.i');
-		echo "<h5>{$formattedTimeB} - {$formattedTimeE}</h5>";
+		
+		$for_subs_only = isset($event['fields']['is_it_subscribers_only']) ? '⭐️' : '';
 
-		//цена more
 		$price_m = $event['fields']['Стоимость д. клуба'];
-		echo "<h5>{$price_m}</h5>";
+		$price_z = isset($event['fields']['Стоимость д. всех']) ? $event['fields']['Стоимость д. всех'] : '-';	
+		$description = isset($event['fields']['Стоимость д. всех']) ? $event['fields']['Описание'] : '';
 
-		//цена заморышей
-		$price_z = $event['fields']['Стоимость д. всех'];
-		echo "<h5>{$price_z}</h5>";
-		echo "</div>";
-    }
+		$this_event = [
+			'event_name' => $event_name, 
+			'date_b' => $formattedDateB, 
+			'time_b' => $formattedTimeB, 
+			'time_e' => $formattedTimeE, 
+			'subs_star' => $for_subs_only, 
+			'price_m' => $price_m, 
+			'price_z' => $price_z, 
+			'description' => $description
+		];
+			array_push($events, $this_event);
+		#echo "<h3>{$event_name}{$for_subs_only}</h3>";
+		#echo "<h5>{$description}</h5>";
+        #echo "<h5>{$formattedDateB}</h5>";
+        #echo "<h5>{$formattedTimeB} - {$formattedTimeE}</h5>";
+		#echo "<h5>{$price_m}/{$price_z}</h5>";
+		#echo "</div>";
+    }  
 	
 
-    
+
+
+
+	return $events;
 }
 
 add_shortcode('airtable_events', 'display_events_calendar');
 
+
+
+
+function display_event_cards() {
+    // Массив с данными ивентов
+	$events = display_events_calendar();
+    
+	// HTML для вывода карточек
+    $output = '<div class="event-cards-container">';
+
+    foreach ($events as $event) {
+
+        // Создание карточки для каждого события
+        $output .= '
+        <div class="event-card">
+            <h3>' . esc_html($event['event_name']) . '</h3>
+            <p class="event-description">' . esc_html($event['description']) . '</p>
+            <p><strong>Date:</strong> ' . esc_html($event['date_b']) . '</p>
+        </div>';
+    }
+
+    $output .= '</div>';
+
+    return $output;
+}
+
+// Регистрация шорткода
+add_shortcode('event_cards', 'display_event_cards');
