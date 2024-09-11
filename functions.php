@@ -202,7 +202,7 @@ add_action( 'init', 'twentytwentyfour_pattern_categories' );
 function get_airtable_events() {
 
 
-    $api_url = 'https://api.airtable.com/v0/app7g2ANnagHYZkZ8/tbleWW3ENwjP0uDgh?maxRecords=3&view=viwwgjyNHmGyuRhia';
+    $api_url = 'https://api.airtable.com/v0/app7g2ANnagHYZkZ8/tbleWW3ENwjP0uDgh?maxRecords=50&view=viwwgjyNHmGyuRhia';
 
     // Заголовки для авторизации и формата запроса
     $headers = array(
@@ -223,11 +223,8 @@ function display_events_calendar() {
 	$events = get_airtable_events();
 	
 	$predata = $events['body'];
-	$data = json_decode($predata, true)['records'];
 	
-	#echo print_r('asdasdasdasdasdasd');
-
-	/// !!!! ОБРАБОТАЙ НА ПУСТЫЕ ПОЛЯ ИЗ AIRTABLE !!!!!!!!!!
+	$data = json_decode($predata, true)['records'];
     
 	
 	#echo gettype($data);
@@ -246,7 +243,9 @@ function display_events_calendar() {
 		$formattedDateB = $dateB->format('d.m') . ' (' . $daysOfWeek[$dayOfWeek] . ')';
 		$formattedTimeB = $dateB->format('H.i');
 		
-		$dateE = new DateTime($event['fields']['Date (end)']);
+		$exception_TimeE = new DateTime($event['fields']['Начало Мероприятия']);
+		$exception_TimeE->modify('+2 hours');
+		$dateE = isset($event['fields']['Date (end)']) ? new DateTime($event['fields']['Date (end)']) : $exception_TimeE;
 		$dateE->modify('+2 hours');
 		$formattedTimeE = $dateE->format('H.i');
 		
@@ -278,42 +277,43 @@ function display_events_calendar() {
 		#echo "<h5>{$price_m}/{$price_z}</h5>";
 		#echo "</div>";
     }  
-	
-
-
-
-	
+	#var_dump($events);
 	return $events;
 }
 
 add_shortcode('airtable_events', 'display_events_calendar');
 
-
-
-
 function display_event_cards() {
     // Массив с данными ивентов
-	$events = display_events_calendar();
+    $events = display_events_calendar();
     
-	// HTML для вывода карточек
+    // HTML для вывода карточек
     $output = '<div class="event-cards-container">';
-	
+    
     foreach ($events as $event) {
-
         // Создание карточки для каждого события
-		var_dump($event);
+		#var_dump($event);
+		#var_dump($event['description']);
         $output .= '
-        <div class="event-card">
-            <h3>' . esc_html($event['event_name']) . '</h3>
+        <div class="event-card" onclick="openModal(\'' . esc_html($event['event_id']) . '\')">
+            <h3><strong>' . esc_html($event['subs_star']) . esc_html($event['event_name']) . '</strong></h3>
             <p class="event-description">' . esc_html($event['description']) . '</p>
-            <p><strong>Date:</strong> ' . esc_html($event['date_b']) . '</p>
+            <p><strong>' . esc_html($event['date_b']) . '</strong></p>
+			
+
         </div>
-		<div id="modal-<?php echo $event['event_id']; ?>" class="modal">
+        
+
+		
+        <!-- Модальное окно для каждого ивента -->
+        <div id="modal-' . esc_html($event['event_id']) . '" class="modal">
             <div class="modal-content">
-                <span class="modal-close" onclick="closeModal('<?php echo $event['event_id']; ?>')">&times;</span>
-                <h3><?php echo esc_html($event['event_name']); ?></h3>
-                <p><?php echo esc_html($event['description']); ?></p>
-                <p><strong>Date:</strong> <?php echo esc_html($event['date_b']); ?></p>
+                <span class="modal-close" onclick="closeModal(\'' . esc_html($event['event_id']) . '\')">&times;</span>
+                <h3>' . esc_html($event['subs_star']) . esc_html($event['event_name']) . '</h3>
+				<h4><strong>' . esc_html($event['date_b']) . ', в ' . esc_html($event['time_b']) . '</strong></h4>
+                <p>' . nl2br(esc_html($event['description'])) . '</p>
+				<p>Цена для .more: €' . esc_html($event['price_m']) . ', для всех: €' . esc_html($event['price_z']) .  '<p>
+                
             </div>
         </div>';
     }
@@ -325,3 +325,10 @@ function display_event_cards() {
 
 // Регистрация шорткода
 add_shortcode('event_cards', 'display_event_cards');
+
+
+function enqueue_custom_scripts() {
+    wp_enqueue_script('custom-script', get_template_directory_uri() . '/script.js', array(), null, true);
+    wp_enqueue_style('custom-style', get_template_directory_uri() . '/style.css');
+}
+add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
